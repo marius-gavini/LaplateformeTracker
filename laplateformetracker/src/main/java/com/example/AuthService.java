@@ -1,27 +1,27 @@
 package com.example;
 
-import java.util.HashMap;
-import java.util.Map;
+import org.mindrot.jbcrypt.BCrypt;
 
 public class AuthService {
 
-    private static final Map<String, User> USERS = new HashMap<>();
-
-    static {
-        USERS.put("admin", new User("admin", "admin", "ADMIN"));
-        USERS.put("eleve", new User("eleve", "eleve", "STUDENT"));
-    }
-
     public static User authenticate(String username, String password) {
-        if (username == null || password == null) {
-            return null;
-        }
+        UserDAO userDAO = new UserDAO();
+        User user = userDAO.findByUsername(username);
 
-        User user = USERS.get(username.trim());
         if (user == null) {
             return null;
         }
 
-        return user.getPassword().equals(password) ? user : null;
+        // Vérification du hash
+        if (BCrypt.checkpw(password, user.getPassword())) {
+            return user;
+        }
+
+        return null;
+    }
+
+    public static String hashPassword(String password) {
+        return BCrypt.hashpw(password, BCrypt.gensalt());
     }
 }
+

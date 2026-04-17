@@ -9,15 +9,15 @@ import java.sql.Statement;
 
 public class DatabaseUtil {
 
-    private static final String DB_URL = "jdbc:postgresql://localhost:5432/db_laplateforme_tracker";
+    private static final String DB_URL = "jdbc:postgresql://localhost:5432/db_Laplateforme_tracker";
     private static final String DB_USERNAME = "postgres";
-    private static final String DB_PASSWORD = "Bobscure-13";
+    private static final String DB_PASSWORD = "postgres";
 
     public static Connection getConnection() throws SQLException {
         try {
             Connection connection = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
             if (connection != null) {
-                System.out.println("Database connection established successfully");
+                System.out.println("Database connectio established successfully");
             }
             return connection;
         } catch (SQLException e) {
