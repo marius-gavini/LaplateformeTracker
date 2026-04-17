@@ -1,0 +1,100 @@
+package com.example;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+public class DatabaseUtil {
+
+    private static final String DB_URL = "jdbc:postgresql://localhost:5432/db_laplateforme_tracker";
+    private static final String DB_USERNAME = "postgres";
+    private static final String DB_PASSWORD = "Bobscure-13";
+
+    public static Connection getConnection() throws SQLException {
+        try {
+            Connection connection = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
+            if (connection != null) {
+                System.out.println("Database connection established successfully");
+            }
+            return connection;
+        } catch (SQLException e) {
+            System.err.println("Failed to establish database connection to " + DB_URL);
+            System.err.println("Error: " + e.getMessage());
+            throw e;
+        }
+    }
+
+    public static void initializeDatabase() {
+        // Vérifier si les tables existent déjà
+        if (tablesExist()) {
+            System.out.println("Database tables already exist - skipping initialization");
+            return;
+        }
+
+        // Création de la table student (existante)
+        String createStudentTableSql = "CREATE TABLE student ("
+                + "id SERIAL PRIMARY KEY, "
+                + "first_name VARCHAR(100) NOT NULL, "
+                + "last_name VARCHAR(100) NOT NULL, "
+                + "age INTEGER NOT NULL "
+                + ");";
+
+        // Création de la table users
+        String createUsersTableSql = "CREATE TABLE users ("
+                + "id SERIAL PRIMARY KEY, "
+                + "username VARCHAR(50) UNIQUE NOT NULL, "
+                + "password VARCHAR(255) NOT NULL, "
+                + "role VARCHAR(20) NOT NULL CHECK (role IN ('student', 'admin'))"
+                + ");";
+
+        // Création de la table promotions
+        String createPromotionsTableSql = "CREATE TABLE promotions ("
+                + "id SERIAL PRIMARY KEY, "
+                + "name VARCHAR(50) NOT NULL, "
+                + "year INT NOT NULL"
+                + ");";
+
+        // Création de la table grades
+        String createGradesTableSql = "CREATE TABLE grades ("
+                + "id SERIAL PRIMARY KEY, "
+                + "user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE, "
+                + "subject VARCHAR(50) NOT NULL, "
+                + "grade NUMERIC(4,2) NOT NULL, "
+                + "promotion_id INT REFERENCES promotions(id) ON DELETE SET NULL"
+                + ");";
+
+        try (Connection connection = getConnection(); Statement statement = connection.createStatement()) {
+            // Création des tables dans l'ordre (pour respecter les contraintes de clés étrangères)
+            statement.execute(createStudentTableSql);
+            statement.execute(createUsersTableSql);
+            statement.execute(createPromotionsTableSql);
+            statement.execute(createGradesTableSql);
+            System.out.println("Database initialized successfully - all tables created");
+        } catch (SQLException e) {
+            System.err.println("Error initializing database: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private static boolean tablesExist() {
+        String checkTablesSql = "SELECT COUNT(*) FROM information_schema.tables "
+                + "WHERE table_schema = 'public' AND table_name IN ('student', 'users', 'promotions', 'grades')";
+
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(checkTablesSql);
+             ResultSet resultSet = statement.executeQuery()) {
+
+            if (resultSet.next()) {
+                int tableCount = resultSet.getInt(1);
+                return tableCount == 4; // Toutes les 4 tables existent
+            }
+        } catch (SQLException e) {
+            // Si erreur (table n'existe pas), on considère qu'il faut initialiser
+            System.out.println("Checking table existence: " + e.getMessage());
+        }
+        return false;
+    }
+}
