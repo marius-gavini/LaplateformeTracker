@@ -28,13 +28,20 @@ public class DatabaseUtil {
     }
 
     public static void initializeDatabase() {
-        // Vérifier si les tables existent déjà
+        // CHECK IF TABLES EXIST
         if (tablesExist()) {
             System.out.println("Database tables already exist - skipping initialization");
             return;
         }
 
-        // Création de la table student (existante)
+        // CREATE PROMOTIONS
+        String createPromotionsTableSql = "CREATE TABLE promotions ("
+                + "id SERIAL PRIMARY KEY, "
+                + "name VARCHAR(50) NOT NULL, "
+                + "year INT NOT NULL"
+                + ");";
+        
+        // CREATE STUDENTS
         String createStudentTableSql = "CREATE TABLE students ("
                 + "id SERIAL PRIMARY KEY, "
                 + "first_name VARCHAR(100) NOT NULL, "
@@ -43,7 +50,7 @@ public class DatabaseUtil {
                 + "promotion_id INT NOT NULL REFERENCES promotions(id) "
                 + ");";
 
-        // Création de la table users
+        // CREATE USERS
         String createUsersTableSql = "CREATE TABLE users ("
                 + "id SERIAL PRIMARY KEY, "
                 + "username VARCHAR(50) UNIQUE NOT NULL, "
@@ -51,14 +58,7 @@ public class DatabaseUtil {
                 + "role VARCHAR(20) NOT NULL CHECK (role IN ('student', 'admin'))"
                 + ");";
 
-        // Création de la table promotions
-        String createPromotionsTableSql = "CREATE TABLE promotions ("
-                + "id SERIAL PRIMARY KEY, "
-                + "name VARCHAR(50) NOT NULL, "
-                + "year INT NOT NULL"
-                + ");";
-
-        // Création de la table grades
+        // CREATE GRADES
         String createGradesTableSql = "CREATE TABLE grades ("
                 + "id SERIAL PRIMARY KEY, "
                 + "user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE, "
@@ -68,10 +68,9 @@ public class DatabaseUtil {
                 + ");";
 
         try (Connection connection = getConnection(); Statement statement = connection.createStatement()) {
-            // Création des tables dans l'ordre (pour respecter les contraintes de clés étrangères)
+            statement.execute(createPromotionsTableSql);
             statement.execute(createStudentTableSql);
             statement.execute(createUsersTableSql);
-            statement.execute(createPromotionsTableSql);
             statement.execute(createGradesTableSql);
             System.out.println("Database initialized successfully - all tables created");
         } catch (SQLException e) {
@@ -82,7 +81,7 @@ public class DatabaseUtil {
 
     private static boolean tablesExist() {
         String checkTablesSql = "SELECT COUNT(*) FROM information_schema.tables "
-                + "WHERE table_schema = 'public' AND table_name IN ('student', 'users', 'promotions', 'grades')";
+                + "WHERE table_schema = 'public' AND table_name IN ('students', 'users', 'promotions', 'grades')";
 
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(checkTablesSql);
@@ -90,10 +89,9 @@ public class DatabaseUtil {
 
             if (resultSet.next()) {
                 int tableCount = resultSet.getInt(1);
-                return tableCount == 4; // Toutes les 4 tables existent
+                return tableCount == 4;
             }
         } catch (SQLException e) {
-            // Si erreur (table n'existe pas), on considère qu'il faut initialiser
             System.out.println("Checking table existence: " + e.getMessage());
         }
         return false;

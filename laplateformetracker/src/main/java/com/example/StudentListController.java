@@ -29,7 +29,7 @@ public class StudentListController {
     private TableColumn<Student, Integer> ageColumn;
 
     @FXML
-    private TableColumn<Student, Double> gradeColumn;
+    private TableColumn<Student, Integer> promotionColumn;
 
     @FXML
     private TextField searchIdField;
@@ -38,19 +38,10 @@ public class StudentListController {
     private TextField searchAgeField;
 
     @FXML
-    private TextField searchMinGradeField;
-
-    @FXML
-    private TextField searchMaxGradeField;
-
-    @FXML
     private ComboBox<String> sortComboBox;
 
     @FXML
     private Label messageLabel;
-
-    @FXML
-    private Button refreshButton;
 
     private final StudentDAO studentDAO = new StudentDAO();
 
@@ -60,9 +51,9 @@ public class StudentListController {
         firstNameColumn.setCellValueFactory(new PropertyValueFactory<>("firstName"));
         lastNameColumn.setCellValueFactory(new PropertyValueFactory<>("lastName"));
         ageColumn.setCellValueFactory(new PropertyValueFactory<>("age"));
-        gradeColumn.setCellValueFactory(new PropertyValueFactory<>("grade"));
+        promotionColumn.setCellValueFactory(new PropertyValueFactory<>("promotion"));
 
-        sortComboBox.setItems(FXCollections.observableArrayList("id", "first_name", "last_name", "age", "grade"));
+        sortComboBox.setItems(FXCollections.observableArrayList("id", "first_name", "last_name", "age", "promotion"));
         sortComboBox.setValue("id");
 
         loadStudents();
@@ -115,28 +106,6 @@ public class StudentListController {
             messageLabel.setText("L'âge doit être un nombre entier.");
         }
     }
-
-    //@FXML
-    //private void searchByGradeRange() {
-    //    String minText = searchMinGradeField.getText();
-    //    String maxText = searchMaxGradeField.getText();
-//
-    //    if ((minText == null || minText.isBlank()) && (maxText == null || maxText.isBlank())) {
-    //        loadStudents();
-    //        return;
-    //    }
-//
-    //    try {
-    //        double minGrade = minText != null && !minText.isBlank() ? Double.parseDouble(minText.trim()) : 0.0;
-    //        double maxGrade = maxText != null && !maxText.isBlank() ? Double.parseDouble(maxText.trim()) : 20.0;
-//
-    //        List<Student> students = studentDAO.findByGradeRange(minGrade, maxGrade);
-    //        studentTable.setItems(FXCollections.observableArrayList(students));
-    //        messageLabel.setText(students.size() + " étudiant(s) trouvé(s) avec des notes entre " + minGrade + " et " + maxGrade + ".");
-    //    } catch (NumberFormatException e) {
-    //        messageLabel.setText("Les notes doivent être des nombres valides.");
-    //    }
-    //}
 
     @FXML
     private void sortStudents() {
@@ -233,8 +202,6 @@ public class StudentListController {
     private void refreshList() {
         searchIdField.clear();
         searchAgeField.clear();
-        searchMinGradeField.clear();
-        searchMaxGradeField.clear();
         sortComboBox.setValue("id");
         loadStudents();
     }

@@ -11,7 +11,6 @@ public class AuthService {
         if (user == null) {
             return null;
         }
-        // Vérification du hash
         if (BCrypt.checkpw(password, user.getPassword())) {
             System.out.print("it's matching");
             return user;

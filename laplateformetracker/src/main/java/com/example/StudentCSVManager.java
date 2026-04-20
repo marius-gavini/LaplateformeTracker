@@ -10,7 +10,7 @@ public class StudentCSVManager {
 
     public static void exportToCSV(List<Student> students, String filePath) throws IOException {
         try (PrintWriter writer = new PrintWriter(new FileWriter(filePath))) {
-            writer.println("ID,Prénom,Nom,Âge,Note");
+            writer.println("ID,Prénom,Nom,Âge,Promotion");
 
             for (Student student : students) {
                 writer.printf(Locale.US, "%d,%s,%s,%d,%.2f%n",
@@ -26,7 +26,6 @@ public class StudentCSVManager {
     public static void importFromCSV(String filePath, StudentDAO studentDAO) throws IOException {
         List<String> lines = Files.readAllLines(Paths.get(filePath));
 
-        // Ignorer l'en-tête
         for (int i = 1; i < lines.size(); i++) {
             String line = lines.get(i);
             String[] parts = line.split(",");

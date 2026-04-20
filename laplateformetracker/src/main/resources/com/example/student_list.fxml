@@ -26,9 +26,6 @@
                     <Button text="Rechercher âge" onAction="#searchByAge" />
                 </HBox>
                 <HBox spacing="10.0">
-                    <TextField fx:id="searchMinGradeField" promptText="Note min" prefWidth="80.0" />
-                    <TextField fx:id="searchMaxGradeField" promptText="Note max" prefWidth="80.0" />
-                    <Button text="Rechercher notes" onAction="#searchByGradeRange" />
                     <ComboBox fx:id="sortComboBox" prefWidth="120.0" />
                     <Button text="Trier" onAction="#sortStudents" />
                     <Button text="Actualiser" onAction="#refreshList" />
@@ -49,7 +46,7 @@
                 <TableColumn fx:id="firstNameColumn" text="Prénom" prefWidth="150.0" />
                 <TableColumn fx:id="lastNameColumn" text="Nom" prefWidth="150.0" />
                 <TableColumn fx:id="ageColumn" text="Âge" prefWidth="80.0" />
-                <TableColumn fx:id="gradeColumn" text="Note" prefWidth="100.0" />
+                <TableColumn fx:id="promotionColumn" text="Promotion" prefWidth="100.0" />
             </columns>
         </TableView>
     </center>

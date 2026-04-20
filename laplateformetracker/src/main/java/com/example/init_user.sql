@@ -3,47 +3,46 @@
 --  Avec mots de passe hashés (BCrypt)
 -- ============================================
 
--- Nettoyage (optionnel)
+-- CLEAN 
 TRUNCATE TABLE promotions;
 TRUNCATE TABLE users RESTART IDENTITY CASCADE;
 TRUNCATE TABLE student RESTART IDENTITY CASCADE; 
 TRUNCATE TABLE grade RESTART IDENTITY CASCADE;
 
---Insertion des promotions
+-- PROMOTIONS
 INSERT INTO promotions (name, year) VALUES
 ('Informatique', 2024),
 ('CyberSécurité', 2024),
 ('Développement Web', 2025);
 
--- Insertion des utilisateurs
-INSERT INTO users (username, password, role) VALUES
-('admin','$2a$10$Ln0eHmoUk/4mZm6LRXdcZeaBRVAbOfLS60yv6GPVfeZUJL35iGfVu', 'admin'),
-('student1', '$2a$10$l4pt0RxfqinxdXmPUPgC9.GOA6Vdy927wCwra6Jw.ERdmBrbeOFTy', 'student');
+-- USERS TEST
+--INSERT INTO users (username, password, role) VALUES
+--('student1', '$2a$10$l4pt0RxfqinxdXmPUPgC9.GOA6Vdy927wCwra6Jw.ERdmBrbeOFTy', 'student');
 
--- Étudiants promotion Informatique
+-- PROMOTION INFO STUDENT
 INSERT INTO users (username, password, role) VALUES
-('jdupont', 'password123', 'student'),
-('mbernard', 'password123', 'student'),
-('acisse', 'password123', 'student');
+('jdupont', '$2a$10$4tRnXfO1f4PNgtOWVqQQTuz.n08XdS5zzRXV2dIYUOL4rTLzXfbNq', 'student'),
+('mbernard', '$2a$10$4tRnXfO1f4PNgtOWVqQQTuz.n08XdS5zzRXV2dIYUOL4rTLzXfbNq', 'student'),
+('acisse', '$2a$10$4tRnXfO1f4PNgtOWVqQQTuz.n08XdS5zzRXV2dIYUOL4rTLzXfbNq', 'student');
 
 INSERT INTO student (first_name, last_name, age, promotion_id) VALUES
 ('Jean', 'Dupont', 21, 1),
 ('Marie', 'Bernard', 22, 1),
 ('Ali', 'Cissé', 20, 1);
 
--- Étudiants promotion CyberSécurité
+-- PROMOTION CYBER STUDENT
 INSERT INTO users (username, password, role) VALUES
-('lmartin', 'password123', 'student'),
-('knguyen', 'password123', 'student');
+('lmartin', '$2a$10$4tRnXfO1f4PNgtOWVqQQTuz.n08XdS5zzRXV2dIYUOL4rTLzXfbNq', 'student'),
+('knguyen', '$2a$10$4tRnXfO1f4PNgtOWVqQQTuz.n08XdS5zzRXV2dIYUOL4rTLzXfbNq', 'student');
 
 INSERT INTO student (first_name, last_name, age, promotion_id) VALUES
 ('Lucas', 'Martin', 23, 2),
 ('Kim', 'Nguyen', 21, 2);
 
--- Étudiants promotion Développement Web
+-- PROMOTION WEB DEV STUDENT
 INSERT INTO users (username, password, role) VALUES
-('sdiop', 'password123', 'student'),
-('fmoreau', 'password123', 'student');
+('sdiop', '$2a$10$4tRnXfO1f4PNgtOWVqQQTuz.n08XdS5zzRXV2dIYUOL4rTLzXfbNq', 'student'),
+('fmoreau', '$2a$10$4tRnXfO1f4PNgtOWVqQQTuz.n08XdS5zzRXV2dIYUOL4rTLzXfbNq', 'student');
 
 INSERT INTO student (first_name, last_name, age, promotion_id) VALUES
 ('Samba', 'Diop', 24, 3),
@@ -61,3 +60,6 @@ INSERT INTO grades (user_id, subject, grade, promotion_id) VALUES
 (3, 'Maths', 10.0, 1),
 (3, 'Java', 11.5, 1),
 (3, 'BDD', 12.0, 1);
+
+INSERT INTO users(username, password, role) VALUES
+('admin','$2a$10$Ln0eHmoUk/4mZm6LRXdcZeaBRVAbOfLS60yv6GPVfeZUJL35iGfVu', 'admin');

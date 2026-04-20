@@ -4,7 +4,7 @@ public class StatisticsManager {
 
     public static StudentStatistics calculateStatistics(StudentDAO studentDAO) {
 
-        double averageGradeByPromotion = studentDAO.getAverageGradeByPromotion(0);
+        double averageGradeByPromotion = studentDAO.getAverageGradeOverall();
         int totalStudents = studentDAO.getStudentCount();
         int studentsUnder18 = studentDAO.getStudentCountByAgeRange(0, 17);
         int students18To25 = studentDAO.getStudentCountByAgeRange(18, 25);

@@ -18,7 +18,7 @@ public class UserDAO {
             if (rs.next()) {
                 User user = new User(
                     rs.getString("username"),
-                    rs.getString("password"), // hash stocké
+                    rs.getString("password"),
                     rs.getString("role")
                 );
                 return user;
