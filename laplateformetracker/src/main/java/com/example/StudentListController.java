@@ -116,27 +116,27 @@ public class StudentListController {
         }
     }
 
-    @FXML
-    private void searchByGradeRange() {
-        String minText = searchMinGradeField.getText();
-        String maxText = searchMaxGradeField.getText();
-
-        if ((minText == null || minText.isBlank()) && (maxText == null || maxText.isBlank())) {
-            loadStudents();
-            return;
-        }
-
-        try {
-            double minGrade = minText != null && !minText.isBlank() ? Double.parseDouble(minText.trim()) : 0.0;
-            double maxGrade = maxText != null && !maxText.isBlank() ? Double.parseDouble(maxText.trim()) : 20.0;
-
-            List<Student> students = studentDAO.findByGradeRange(minGrade, maxGrade);
-            studentTable.setItems(FXCollections.observableArrayList(students));
-            messageLabel.setText(students.size() + " étudiant(s) trouvé(s) avec des notes entre " + minGrade + " et " + maxGrade + ".");
-        } catch (NumberFormatException e) {
-            messageLabel.setText("Les notes doivent être des nombres valides.");
-        }
-    }
+    //@FXML
+    //private void searchByGradeRange() {
+    //    String minText = searchMinGradeField.getText();
+    //    String maxText = searchMaxGradeField.getText();
+//
+    //    if ((minText == null || minText.isBlank()) && (maxText == null || maxText.isBlank())) {
+    //        loadStudents();
+    //        return;
+    //    }
+//
+    //    try {
+    //        double minGrade = minText != null && !minText.isBlank() ? Double.parseDouble(minText.trim()) : 0.0;
+    //        double maxGrade = maxText != null && !maxText.isBlank() ? Double.parseDouble(maxText.trim()) : 20.0;
+//
+    //        List<Student> students = studentDAO.findByGradeRange(minGrade, maxGrade);
+    //        studentTable.setItems(FXCollections.observableArrayList(students));
+    //        messageLabel.setText(students.size() + " étudiant(s) trouvé(s) avec des notes entre " + minGrade + " et " + maxGrade + ".");
+    //    } catch (NumberFormatException e) {
+    //        messageLabel.setText("Les notes doivent être des nombres valides.");
+    //    }
+    //}
 
     @FXML
     private void sortStudents() {

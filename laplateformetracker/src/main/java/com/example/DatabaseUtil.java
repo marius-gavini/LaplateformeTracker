@@ -17,7 +17,7 @@ public class DatabaseUtil {
         try {
             Connection connection = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
             if (connection != null) {
-                System.out.println("Database connectio established successfully");
+                System.out.println("Database connection established successfully");
             }
             return connection;
         } catch (SQLException e) {
@@ -35,11 +35,12 @@ public class DatabaseUtil {
         }
 
         // Création de la table student (existante)
-        String createStudentTableSql = "CREATE TABLE student ("
+        String createStudentTableSql = "CREATE TABLE students ("
                 + "id SERIAL PRIMARY KEY, "
                 + "first_name VARCHAR(100) NOT NULL, "
                 + "last_name VARCHAR(100) NOT NULL, "
-                + "age INTEGER NOT NULL "
+                + "age INTEGER NOT NULL, "
+                + "promotion_id INT NOT NULL REFERENCES promotions(id) "
                 + ");";
 
         // Création de la table users

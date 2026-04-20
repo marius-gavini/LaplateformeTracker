@@ -11,7 +11,7 @@ public class StudentDAO {
 
     public List<Student> findAll() {
         List<Student> students = new ArrayList<>();
-        String sql = "SELECT id, first_name, last_name, age, grade FROM student ORDER BY id";
+        String sql = "SELECT id, first_name, last_name, age, promotion_id FROM student ORDER BY id";
 
         try (Connection connection = DatabaseUtil.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql);
@@ -29,7 +29,7 @@ public class StudentDAO {
     }
 
     public Student findById(int id) {
-        String sql = "SELECT id, first_name, last_name, age, grade FROM student WHERE id = ?";
+        String sql = "SELECT id, first_name, last_name, age, promotion_id FROM student WHERE id = ?";
         try (Connection connection = DatabaseUtil.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
 
@@ -47,7 +47,7 @@ public class StudentDAO {
 
     public List<Student> findByAge(int age) {
         List<Student> students = new ArrayList<>();
-        String sql = "SELECT id, first_name, last_name, age, grade FROM student WHERE age = ? ORDER BY id";
+        String sql = "SELECT id, first_name, last_name, age, promotion_id FROM student WHERE age = ? ORDER BY id";
         try (Connection connection = DatabaseUtil.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
 
@@ -63,14 +63,13 @@ public class StudentDAO {
         return students;
     }
 
-    public List<Student> findByGradeRange(double minGrade, double maxGrade) {
+    public List<Student> findByPromotionId(int promotionId) {
         List<Student> students = new ArrayList<>();
-        String sql = "SELECT id, first_name, last_name, age, grade FROM student WHERE grade BETWEEN ? AND ? ORDER BY id";
+        String sql = "SELECT id, first_name, last_name, age, promotion_id FROM student WHERE promotion_id = ? ORDER BY id";
         try (Connection connection = DatabaseUtil.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
 
-            statement.setDouble(1, minGrade);
-            statement.setDouble(2, maxGrade);
+            statement.setInt(1, promotionId);
             try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
                     students.add(mapResultSetToStudent(resultSet));
@@ -91,7 +90,7 @@ public class StudentDAO {
             case "first_name":
             case "last_name":
             case "age":
-            case "grade":
+            case "promotion_id":
             case "id":
                 validSortColumn = sortBy;
                 break;
@@ -99,7 +98,7 @@ public class StudentDAO {
                 validSortColumn = "id";  // Default to id if invalid column provided
         }
         
-        String sql = "SELECT id, first_name, last_name, age, grade FROM student ORDER BY " + validSortColumn + " ASC";
+        String sql = "SELECT id, first_name, last_name, age, promotion_id FROM student ORDER BY " + validSortColumn + " ASC";
 
         try (Connection connection = DatabaseUtil.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql);
@@ -117,14 +116,14 @@ public class StudentDAO {
     }
 
     public boolean add(Student student) {
-        String sql = "INSERT INTO student (first_name, last_name, age, grade) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO student (first_name, last_name, age, promotion_id) VALUES (?, ?, ?, ?)";
         try (Connection connection = DatabaseUtil.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
 
             statement.setString(1, student.getFirstName());
             statement.setString(2, student.getLastName());
             statement.setInt(3, student.getAge());
-            statement.setDouble(4, student.getGrade());
+            statement.setInt(4, student.getPromotion());
             return statement.executeUpdate() == 1;
         } catch (SQLException e) {
             System.err.println("Error adding student: " + e.getMessage());
@@ -134,14 +133,14 @@ public class StudentDAO {
     }
 
     public boolean update(Student student) {
-        String sql = "UPDATE student SET first_name = ?, last_name = ?, age = ?, grade = ? WHERE id = ?";
+        String sql = "UPDATE student SET first_name = ?, last_name = ?, age = ?, promotion_id = ? WHERE id = ?";
         try (Connection connection = DatabaseUtil.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
 
             statement.setString(1, student.getFirstName());
             statement.setString(2, student.getLastName());
             statement.setInt(3, student.getAge());
-            statement.setDouble(4, student.getGrade());
+            statement.setInt(4, student.getPromotion());
             statement.setInt(5, student.getId());
             return statement.executeUpdate() == 1;
         } catch (SQLException e) {
@@ -165,18 +164,45 @@ public class StudentDAO {
         return false;
     }
 
-    public double getAverageGrade() {
-        String sql = "SELECT AVG(grade) as average FROM student";
-        try (Connection connection = DatabaseUtil.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql);
-             ResultSet resultSet = statement.executeQuery()) {
+    public double getAverageGradeByUserId(int userId) {
+        String sql = "SELECT AVG(grade) AS avg_grade FROM grades WHERE user_id = ?";
 
-            if (resultSet.next()) {
-                return resultSet.getDouble("average");
+        try (Connection connection = DatabaseUtil.getConnection();
+             PreparedStatement stmt = connection.prepareStatement(sql)) {
+
+            stmt.setInt(1, userId);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getDouble("avg_grade");
+                }
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        return 0.0; // si aucune note
+    }
+
+    public double getAverageGradeByPromotion(int promotionId) {
+        String sql = "SELECT AVG(grade) AS avg_grade FROM grades WHERE promotion_id = ?";
+
+        try (Connection conn = DatabaseUtil.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, promotionId);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getDouble("avg_grade");
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
         return 0.0;
     }
 
@@ -218,7 +244,7 @@ public class StudentDAO {
         String firstName = resultSet.getString("first_name");
         String lastName = resultSet.getString("last_name");
         int age = resultSet.getInt("age");
-        double grade = resultSet.getDouble("grade");
-        return new Student(id, firstName, lastName, age, grade);
+        int promotion_id = resultSet.getInt("promotion_id");
+        return new Student(id, firstName, lastName, age, promotion_id);
     }
 }

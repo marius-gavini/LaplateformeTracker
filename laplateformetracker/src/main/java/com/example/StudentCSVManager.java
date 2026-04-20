@@ -4,22 +4,21 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Locale;
 
 public class StudentCSVManager {
 
     public static void exportToCSV(List<Student> students, String filePath) throws IOException {
         try (PrintWriter writer = new PrintWriter(new FileWriter(filePath))) {
-            // Écrire l'en-tête
             writer.println("ID,Prénom,Nom,Âge,Note");
 
-            // Écrire les données
             for (Student student : students) {
-                writer.printf("%d,%s,%s,%d,%.2f%n",
+                writer.printf(Locale.US, "%d,%s,%s,%d,%.2f%n",
                     student.getId(),
                     escapeCSV(student.getFirstName()),
                     escapeCSV(student.getLastName()),
                     student.getAge(),
-                    student.getGrade());
+                    student.getPromotion());
             }
         }
     }
@@ -37,9 +36,9 @@ public class StudentCSVManager {
                     String firstName = unescapeCSV(parts[1]);
                     String lastName = unescapeCSV(parts[2]);
                     int age = Integer.parseInt(parts[3].trim());
-                    double grade = Double.parseDouble(parts[4].trim());
+                    int promotion_id = Integer.parseInt(parts[4].trim());
 
-                    Student student = new Student(firstName, lastName, age, grade);
+                    Student student = new Student(firstName, lastName, age, promotion_id);
                     studentDAO.add(student);
                 } catch (NumberFormatException e) {
                     System.err.println("Erreur de format à la ligne " + (i + 1) + ": " + line);

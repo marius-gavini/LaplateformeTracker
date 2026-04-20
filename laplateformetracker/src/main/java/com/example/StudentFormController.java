@@ -21,7 +21,7 @@ public class StudentFormController {
     private TextField ageField;
 
     @FXML
-    private TextField gradeField;
+    private TextField promotionField;
 
     @FXML
     private Label errorLabel;
@@ -43,7 +43,7 @@ public class StudentFormController {
             firstNameField.setText(editingStudent.getFirstName());
             lastNameField.setText(editingStudent.getLastName());
             ageField.setText(String.valueOf(editingStudent.getAge()));
-            gradeField.setText(String.valueOf(editingStudent.getGrade()));
+            promotionField.setText(String.valueOf(editingStudent.getPromotion()));
         } else {
             formTitle.setText("Ajouter un nouvel étudiant");
         }
@@ -54,23 +54,18 @@ public class StudentFormController {
         String firstName = firstNameField.getText();
         String lastName = lastNameField.getText();
         String ageText = ageField.getText();
-        String gradeText = gradeField.getText();
+        String promotion = promotionField.getText();
 
-        if (firstName == null || firstName.isBlank() || lastName == null || lastName.isBlank() || ageText == null || ageText.isBlank() || gradeText == null || gradeText.isBlank()) {
+        if (firstName == null || firstName.isBlank() || lastName == null || lastName.isBlank() || ageText == null || ageText.isBlank() || promotion == null || promotion.isBlank()) {
             errorLabel.setText("Tous les champs doivent être remplis.");
             return;
         }
 
         try {
             int age = Integer.parseInt(ageText.trim());
-            double grade = Double.parseDouble(gradeText.trim());
 
             if (age <= 0) {
                 errorLabel.setText("L'âge doit être un entier positif.");
-                return;
-            }
-            if (grade < 0 || grade > 20) {
-                errorLabel.setText("La note doit être entre 0 et 20.");
                 return;
             }
 
@@ -78,7 +73,7 @@ public class StudentFormController {
                 editingStudent.setFirstName(firstName.trim());
                 editingStudent.setLastName(lastName.trim());
                 editingStudent.setAge(age);
-                editingStudent.setGrade(grade);
+                editingStudent.setPromotion(Integer.parseInt(promotion.trim()));
                 boolean updated = studentDAO.update(editingStudent);
                 if (updated) {
                     App.setRoot("student_list");
@@ -86,7 +81,7 @@ public class StudentFormController {
                     errorLabel.setText("Impossible de mettre à jour l'étudiant.");
                 }
             } else {
-                Student student = new Student(firstName.trim(), lastName.trim(), age, grade);
+                Student student = new Student(firstName.trim(), lastName.trim(), age, Integer.parseInt(promotion.trim()));
                 boolean added = studentDAO.add(student);
                 if (added) {
                     App.setRoot("student_list");
@@ -95,7 +90,7 @@ public class StudentFormController {
                 }
             }
         } catch (NumberFormatException e) {
-            errorLabel.setText("L'âge et la note doivent être des nombres valides.");
+            errorLabel.setText("L'âge et la promotion doivent être des nombres valides.");
         }
     }
 

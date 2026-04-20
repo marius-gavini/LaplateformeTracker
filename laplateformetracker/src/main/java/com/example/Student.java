@@ -5,24 +5,24 @@ public class Student {
     private String firstName;
     private String lastName;
     private int age;
-    private double grade;
+    private int promotion_id;
 
     public Student() {
     }
 
-    public Student(int id, String firstName, String lastName, int age, double grade) {
+    public Student(int id, String firstName, String lastName, int age, int promotion_id) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.age = age;
-        this.grade = grade;
+        this.promotion_id = promotion_id;
     }
 
-    public Student(String firstName, String lastName, int age, double grade) {
+    public Student(String firstName, String lastName, int age, int promotion_id) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.age = age;
-        this.grade = grade;
+        this.promotion_id = promotion_id;
     }
 
     public int getId() {
@@ -57,11 +57,11 @@ public class Student {
         this.age = age;
     }
 
-    public double getGrade() {
-        return grade;
+    public int getPromotion() {
+        return promotion_id;
     }
 
-    public void setGrade(double grade) {
-        this.grade = grade;
+    public void setPromotion(int promotion_id) {
+        this.promotion_id = promotion_id;
     }
 }

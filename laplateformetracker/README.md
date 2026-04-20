@@ -1,171 +1,116 @@
 # 📚 La Plateforme Tracker - Gestion des Étudiants
 
-Une application de gestion des étudiants moderne et sécurisée, développée avec **JavaFX** et **PostgreSQL**. Avec authentification par rôles, CRUD complet, statistiques et import/export CSV.
+Application JavaFX de gestion des étudiants avec accès à une base PostgreSQL.
+
+Ce projet propose un écran de connexion, une liste d'étudiants, un formulaire de saisie/modification, de l'import/export CSV et des statistiques.
 
 ---
 
-## ✨ Fonctionnalités
+## 🚀 Le projet en bref
 
-### 🔐 Authentification et Sécurité
-- Connexion avec **nom d'utilisateur et mot de passe**
-- Mots de passe **hashés avec BCrypt** (sécurisé)
-- Deux rôles : `admin` et `student`
-- Comptes par défaut :
-  - `admin` / `admin` → **Admin**
-  - `student` / `student` → **Étudiant**
-
-### 👥 Gestion des Étudiants (CRUD)
-- ✅ **Ajouter** un nouvel étudiant (nom, prénom, âge, note)
-- ✏️ **Modifier** les données d'un étudiant
-- 🗑️ **Supprimer** un étudiant
-- 👀 **Afficher** la liste complète
-- 🔍 **Rechercher** un étudiant par ID
-
-### 📊 Fonctionnalités Avancées
-- **Tri avancé** : par nom, prénom, âge, ou moyenne
-- **Recherche filtrée** :
-  - Par âge exact
-  - Par plage de notes (min-max)
-- **Statistiques en temps réel** :
-  - Moyenne des notes
-  - Distribution par tranches d'âge
-- **Import/Export CSV** :
-  - Export complet des données
-  - Import en masse depuis fichier CSV
+- Interface graphique créée avec **JavaFX**.
+- Authentification gérée via **AuthService** et **UserDAO**.
+- Modèle étudiant stocké via **StudentDAO**.
+- Import/Export CSV avec **StudentCSVManager**.
+- Statistiques calculées dans **StatisticsManager**.
 
 ---
 
-## 🛠️ Prérequis
+## 📦 Prérequis
 
-| Composant | Version | Statut |
-|-----------|---------|--------|
-| Java | 11+ | ✅ Requis |
-| Maven | 3.6+ | ✅ Requis |
-| PostgreSQL | 12+ | ✅ Requis |
-| JavaFX | 13+ | ✅ Inclus dans pom.xml |
+- Java 11+
+- Maven 3.6+
+- PostgreSQL 12+
+- Connexion JDBC configurée dans `DatabaseUtil.java`
 
 ---
 
-## 📦 Installation et Configuration
+## ⚙️ Configuration de la base de données
 
-### 1. Préparer la Base de Données
+1. Créez la base PostgreSQL :
 
-```bash
-# Se connecter à PostgreSQL
-psql -U postgres
-
-# Créer la base de données
+```sql
 CREATE DATABASE db_laplateforme_tracker;
 ```
 
-La structure des tables sera créée automatiquement au premier lancement.
-
-### 2. Configurer la Connexion (optionnel)
-
-Modifier [DatabaseUtil.java](laplateformetracker/src/main/java/com/example/DatabaseUtil.java) si nécessaire :
+2. Vérifiez les paramètres dans `src/main/java/com/example/DatabaseUtil.java` :
 
 ```java
-private static final String DB_URL = "jdbc:postgresql://localhost:5432/db_laplateforme_tracker";
+private static final String DB_URL = "jdbc:postgresql://localhost:5432/db_Laplateforme_tracker";
 private static final String DB_USERNAME = "postgres";
 private static final String DB_PASSWORD = "postgres";
 ```
 
-### 3. Compiler le Projet
+3. Au premier démarrage, le projet tente de créer automatiquement le schéma.
+
+---
+
+## ▶️ Compilation et exécution
 
 ```bash
 cd laplateformetracker
 mvn clean compile
-```
-
-### 4. Lancer l'Application
-
-```bash
 mvn javafx:run
 ```
 
 ---
 
-## 🏗️ Architecture
-
-### Structure du Projet
+## 🧩 Structure du projet
 
 ```
 laplateformetracker/
+├── pom.xml
+├── README.md
 ├── src/main/java/com/example/
-│   ├── App.java                      # Point d'entrée
-│   ├── AuthService.java              # Authentification
-│   ├── LoginController.java           # Écran de connexion
-│   ├── PrimaryController.java         # Tableau de bord
-│   ├── StudentListController.java     # Gestion de la liste
-│   ├── StudentFormController.java     # Formulaire CRUD
-│   ├── StudentDAO.java               # Accès données (Students)
-│   ├── UserDAO.java                  # Accès données (Users)
-│   ├── DatabaseUtil.java             # Gestion DB
-│   ├── Student.java                  # Modèle
-│   ├── User.java                     # Modèle
-│   ├── StudentCSVManager.java        # Import/Export CSV
-│   ├── StatisticsManager.java        # Calculs stats
-│   └── module-info.java              # Configuration modules
-├── src/main/resources/
-│   └── com/example/                  # Fichiers FXML
-│       ├── login.fxml
-│       ├── primary.fxml
-│       ├── secondary.fxml
-│       ├── student_form.fxml
-│       └── student_list.fxml
-├── pom.xml                           # Configuration Maven
-└── README.md                         # Ce fichier
-```
-
-### Diagramme des Couches
-
-```
-┌─────────────────────────────┐
-│   UI (Controllers/FXML)     │  ← Interaction utilisateur
-├─────────────────────────────┤
-│   Business Logic (Services) │  ← Authentification, Statistiques
-├─────────────────────────────┤
-│   Data Access (DAO)         │  ← StudentDAO, UserDAO
-├─────────────────────────────┤
-│   Database (PostgreSQL)     │  ← Persistence
-└─────────────────────────────┘
+│   ├── App.java
+│   ├── AuthService.java
+│   ├── DatabaseUtil.java
+│   ├── LoginController.java
+│   ├── PrimaryController.java
+│   ├── StudentFormController.java
+│   ├── StudentListController.java
+│   ├── StudentDAO.java
+│   ├── StudentCSVManager.java
+│   ├── StatisticsManager.java
+│   ├── Student.java
+│   ├── StudentStatistics.java
+│   ├── User.java
+│   ├── UserDAO.java
+│   ├── HashGen.java
+│   └── module-info.java
+└── src/main/resources/com/example/
+    ├── login.fxml
+    ├── primary.fxml
+    ├── secondary.fxml
+    ├── student_form.fxml
+    └── student_list.fxml
 ```
 
 ---
 
-## 📚 Dépendances
+## ✅ Fonctionnalités observées
 
-| Dépendance | Version | Usage |
-|-----------|---------|-------|
-| JavaFX Controls | 13 | Interface GUI |
-| JavaFX FXML | 13 | Définition layouts |
-| PostgreSQL Driver | 42.6.0 | Connexion DB |
-| JBCrypt | 0.4 | Hash sécurisé mots de passe |
-
----
-
-## 🔄 Flux d'Authentification
-
-```
-1. Utilisateur saisit username/password
-                    ↓
-2. LoginController → AuthService.authenticate()
-                    ↓
-3. AuthService → UserDAO.findByUsername()
-                    ↓
-4. Récupération User depuis DB
-                    ↓
-5. Vérification hash : BCrypt.checkpw(password, hash)
-                    ↓
-6. Si valide → Redirection tableau de bord
-   Sinon → Message d'erreur
-```
+- Connexion utilisateur via `LoginController`.
+- Authentification sécurisée avec **BCrypt**.
+- CRUD étudiant : création, modification, suppression.
+- Recherche par ID et par âge.
+- Tri de la liste par colonnes.
+- Affichage de statistiques via `StatisticsManager`.
+- Export CSV et import CSV de la liste d'étudiants.
 
 ---
 
-## 📋 Schéma Base de Données
+## 🔧 Architecture de données
 
-### Table: `users`
+Le code contient un schéma de base de données défini dans `DatabaseUtil` :
+
+- `users`
+- `students`
+- `promotions`
+- `grades`
+
+### Tables principales
+
 ```sql
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
@@ -175,100 +120,65 @@ CREATE TABLE users (
 );
 ```
 
-### Table: `student`
 ```sql
-CREATE TABLE student (
+CREATE TABLE students (
     id SERIAL PRIMARY KEY,
     first_name VARCHAR(100) NOT NULL,
     last_name VARCHAR(100) NOT NULL,
     age INTEGER NOT NULL,
-    grade NUMERIC(4,2) NOT NULL
+    promotion_id INT NOT NULL REFERENCES promotions(id)
 );
 ```
 
-### Tables additionnelles
-- `promotions` : Gestion des promotions
-- `grades` : Notes par sujet et promotion
+```sql
+CREATE TABLE promotions (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(50) NOT NULL,
+    year INT NOT NULL
+);
+```
 
----
-
-## 🚀 Guide d'Utilisation
-
-### Première Connexion
-1. Lancer l'application → Écran de login
-2. Entrer : `admin` / `admin` (ou `student` / `student`)
-3. Cliquer "Se Connecter"
-
-### Ajouter un Étudiant
-1. Aller dans **Gestion Étudiants** → **Ajouter**
-2. Remplir le formulaire (nom, prénom, âge, note)
-3. Cliquer **Enregistrer**
-
-### Exporter en CSV
-1. **Gestion Étudiants** → **Export CSV**
-2. Sélectionner l'emplacement
-3. Fichier créé : `students_export.csv`
-
-### Importer depuis CSV
-1. Préparer un fichier CSV avec colonnes : `first_name,last_name,age,grade`
-2. **Gestion Étudiants** → **Import CSV**
-3. Sélectionner le fichier → Valider
-
----
-
-## 🧪 Compilation et Tests
-
-```bash
-# Nettoyer + Compiler
-mvn clean compile
-
-# Compiler avec tests
-mvn clean test-compile
-
-# Lancer les tests (si disponibles)
-mvn test
-
-# Build complet
-mvn clean package
+```sql
+CREATE TABLE grades (
+    id SERIAL PRIMARY KEY,
+    user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    subject VARCHAR(50) NOT NULL,
+    grade NUMERIC(4,2) NOT NULL,
+    promotion_id INT REFERENCES promotions(id) ON DELETE SET NULL
+);
 ```
 
 ---
 
-## 📝 Fichiers de Configuration
+## ⚠️ Points à corriger
 
-### `pom.xml`
-- Configuration Maven
-- Gestion des dépendances
-- Plugins JavaFX et compiler
+Le projet n'est pas totalement aligné actuellement. Voici les points principaux à vérifier :
 
-### `module-info.java`
-- Système de modules Java
-- Déclaration des dépendances :
-  - `javafx.controls`, `javafx.fxml`, `javafx.graphics`
-  - `java.sql`
-  - `jbcrypt` (automatic module)
+- `DatabaseUtil` crée une table `students` tandis que `StudentDAO` interroge `student`.
+- `Student` contient un champ `promotion_id`, mais l'interface continue de manipuler des colonnes/tri `grade`.
+- Aucun utilisateur n'est inséré automatiquement à la création de la base : il faut ajouter un `admin` et des `promotions` manuellement.
+- La recherche par plage de notes est présente dans l'interface mais partiellement désactivée dans le code.
 
 ---
 
-## ⚠️ Troubleshooting
+## 💡 Recommandations pour développement
 
-| Problème | Solution |
-|----------|----------|
-| "Cannot connect to database" | Vérifier que PostgreSQL est démarré et accessible |
-| "Table does not exist" | L'application crée les tables automatiquement au premier lancement |
-| "BCrypt not found" | Vérifier que `jbcrypt` est dans `pom.xml` et `module-info.java` |
-| "JavaFX not found" | Exécuter `mvn clean compile` pour télécharger les dépendances |
+- Vérifier et unifier le nom de la table student(s).
+- Harmoniser le modèle étudiant entre `promotion_id` et `grade`.
+- Ajouter un script de seed ou des données d'exemple.
+- Compléter les tests unitaires pour la DAO et les services.
 
 ---
 
-## 📄 Licence
+## 🛠️ Notes techniques
 
-Ce projet est fourni à titre d'exemple éducatif.
+- `App.java` lance l'application JavaFX et initialise la base.
+- `StudentCSVManager` gère l'import/export CSV.
+- `StatisticsManager` calcule des statistiques à partir de `StudentDAO`.
+- `AuthService` utilise `BCrypt` pour vérifier le mot de passe.
 
 ---
 
-## 👤 Auteur
+## 📌 Conclusion
 
-Développé avec **JavaFX**, **PostgreSQL** et **Maven**.
-
-**Dernière mise à jour :** Avril 2026
+Ce projet est une application JavaFX de gestion étudiante avec une bonne base technique. Pour la rendre pleinement fonctionnelle, il faut corriger les incohérences de schéma et ajouter un jeu de données initial.

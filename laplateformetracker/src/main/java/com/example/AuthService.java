@@ -11,12 +11,12 @@ public class AuthService {
         if (user == null) {
             return null;
         }
-
         // Vérification du hash
         if (BCrypt.checkpw(password, user.getPassword())) {
+            System.out.print("it's matching");
             return user;
         }
-
+        System.out.println("Not matching");
         return null;
     }
 
@@ -24,4 +24,3 @@ public class AuthService {
         return BCrypt.hashpw(password, BCrypt.gensalt());
     }
 }
-
