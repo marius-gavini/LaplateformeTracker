@@ -13,7 +13,7 @@ public class StudentCSVManager {
             writer.println("ID,Prénom,Nom,Âge,Promotion");
 
             for (Student student : students) {
-                writer.printf(Locale.US, "%d,%s,%s,%d,%.2f%n",
+                writer.printf(Locale.US, "%d,%s,%s,%d,%.2f%n,%d",
                     student.getId(),
                     escapeCSV(student.getFirstName()),
                     escapeCSV(student.getLastName()),

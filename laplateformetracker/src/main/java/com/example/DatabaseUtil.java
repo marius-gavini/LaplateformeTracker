@@ -63,8 +63,7 @@ public class DatabaseUtil {
                 + "id SERIAL PRIMARY KEY, "
                 + "user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE, "
                 + "subject VARCHAR(50) NOT NULL, "
-                + "grade NUMERIC(4,2) NOT NULL, "
-                + "promotion_id INT REFERENCES promotions(id) ON DELETE SET NULL"
+                + "grade NUMERIC(4,2) NOT NULL "
                 + ");";
 
         try (Connection connection = getConnection(); Statement statement = connection.createStatement()) {
